@@ -1,4 +1,4 @@
-# Android Josa Formatter 1.4
+# Josa Formatter 1.4
 String.format을 확장해 받침에 따라 조사(은,는,이,가,을,를 등)를 교정합니다.
 
 ***아직 읽는 방법에 대한 규칙을 찾지 못한 부분이 많습니다. 오동작이 발견되거나 좀 더 나은 규칙이 있다면 꼭!! 알려주세요.***
@@ -14,21 +14,17 @@ KoreanUtils.format("%s를 %s으로 변경할까요?", "아이폰", "Galaxy");
 
 
 ### Setup
-app/build.gradle
+build.gradle
 ```diff
-apply plugin: 'com.android.application'
+apply plugin: 'java'  // or 'com.android.application'
 
 + repositories {
 +    maven { url "https://jitpack.io" }
 + }
 
-android {
-...
-}
-
 dependencies {
 ...
-+ compile 'com.github.b1uec0in:androidjosaformatter:1.4'
++ compile 'com.github.b1uec0in:JosaFormatter:1.4'
 }
 ```
 
