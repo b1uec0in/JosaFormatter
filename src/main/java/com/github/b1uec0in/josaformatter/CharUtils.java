@@ -21,12 +21,12 @@ class CharUtils {
         return ch >= '0' && ch <= '9';
     }
 
-    public static boolean isHangulFullChar(char ch) {
+    public static boolean isHangulSyllables(char ch) {
         return ch >= 0xac00 && ch <= 0xd7af;
     }
 
     public static boolean hasHangulJongSung(char ch) {
-        return isHangulFullChar(ch) && (ch - 0xAC00) % 28 > 0;
+        return isHangulSyllables(ch) && (ch - 0xAC00) % 28 > 0;
     }
 
     public static boolean isHiragana(char ch) {

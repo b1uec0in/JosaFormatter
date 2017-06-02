@@ -235,7 +235,7 @@ public class JosaFormatter {
 
         @Override
         public boolean canHandle(String str) {
-            return CharUtils.isHangulFullChar(CharUtils.lastChar(str));
+            return CharUtils.isHangulSyllables(CharUtils.lastChar(str));
         }
 
         @Override
@@ -305,7 +305,7 @@ public class JosaFormatter {
 
                 // 마지막 1문자로 오면 항상 종성이 아닌 경우
                 String notJongSungChars = "afhiorsuvwxyz";
-                if (jongSungChars.indexOf(lastChar1) >= 0) {
+                if (notJongSungChars.indexOf(lastChar1) >= 0) {
                     return false;
                 }
 
