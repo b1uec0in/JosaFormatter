@@ -35,6 +35,16 @@ public class HanjaMap {
         return ch;
     }
 
+    public static String toHangul(CharSequence str) {
+        StringBuilder result = new StringBuilder();
+
+        for (int i = 0; i < str.length(); ++i) {
+            result.append(toHangul(str.charAt(i)));
+        }
+
+        return result.toString();
+    }
+
     /* CJK Ideographs Ext. A : 3400-4DBF */
     private static class CJK_Ideographs_Ext_A {
         private static char first = 0x3400;
@@ -507,7 +517,7 @@ public class HanjaMap {
         };
     }
 
-    /* CJK Ideographs Ext. A : F900-FAFF */
+    /* CJK Ideographs Compatibility : F900-FAFF */
     private static class CJK_Ideographs_Compatibility {
         private static char first = 0xF900;
         private static char chars[] = {
