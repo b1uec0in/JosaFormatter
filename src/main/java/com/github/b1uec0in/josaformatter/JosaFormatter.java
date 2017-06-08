@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -54,8 +56,96 @@ public class JosaFormatter {
         return format(Locale.getDefault(), format, args);
     }
 
+    public static class FormattedString {
+        private String s;
+        private boolean isFormatString;
+
+        public FormattedString(String s, boolean isFormatString) {
+            this.s = s;
+            this.isFormatString = isFormatString;
+        }
+
+        public String toString() {
+            return s;
+        }
+
+        public boolean isFormatString() {
+            return isFormatString;
+        }
+    }
+
+
+    // 't', 'T' (date/time) conversion are not supported
+    private static final String simpleFormatRegex = "%(\\d+\\$?\\<?)?([-#+ 0,(]*)?(\\d+)?(\\.\\d+)?([bBhHsScCdoxXeEfgGaAtT%])";
+
+    private static Pattern simpleFormatPattern = Pattern.compile(simpleFormatRegex);
+
+    public static ArrayList<FormattedString> parseFormat(Locale locale, String format, Object[] args) {
+        ArrayList<FormattedString> formattedStrings = new ArrayList<>();
+
+        Matcher matcher = simpleFormatPattern.matcher(format);
+
+        int prevMatcherEnd = 0;
+        int argIndex = 0;
+        int lastArgIndex = -1;
+        while (matcher.find()) {
+            int start = matcher.start();
+
+            if (start > prevMatcherEnd) {
+                String prevText = format.substring(prevMatcherEnd, start);
+                formattedStrings.add(new FormattedString(prevText, false));
+            }
+            String singleFormat = matcher.group();
+
+            int groupCount = matcher.groupCount();
+
+            if (groupCount == 5) {
+                String indexString = matcher.group(1);
+                String conversion = matcher.group(5);
+
+                if (conversion.equals("%")) {
+                    formattedStrings.add(new FormattedString(singleFormat, false));
+                } else {
+                    int index = -1;
+                    if (indexString != null && indexString.length() > 0) {
+
+                        if (indexString.equals("<")) { // previous format specifier index
+                            index = lastArgIndex;
+                        } else if (indexString.endsWith("$")) { // argument position indexing
+                            try {
+                                index = Integer.parseInt(indexString.substring(0, indexString.length() - 1)) - 1;
+                            } catch (Exception e) {
+                                index = 0;
+                            }
+                            lastArgIndex = index;
+                        }
+
+                        // remove indexString
+                        singleFormat = format.substring(matcher.start(0), matcher.start(1)) + format.substring(matcher.end(1), matcher.end(0));
+
+                    } else { // relative indexing
+                        index = argIndex++;
+                        lastArgIndex = index;
+                    }
+
+                    String singleFormattedString = String.format(locale, singleFormat, args[index]);
+                    formattedStrings.add(new FormattedString(singleFormattedString, true));
+                }
+                prevMatcherEnd = matcher.end();
+            }
+
+        }
+
+        if (format.length() > prevMatcherEnd) {
+            String prevText = format.substring(prevMatcherEnd);
+            formattedStrings.add(new FormattedString(prevText, false));
+        }
+
+        return formattedStrings;
+    }
+
     public String format(Locale l, String format, Object... args) {
-        ArrayList<Formatter.FormattedString> formattedStrings = Formatter.format(l, format, args);
+        ArrayList<FormattedString> formattedStrings = parseFormat(l, format, args);
 
         int count = formattedStrings.size();
         StringBuilder sb = new StringBuilder(formattedStrings.get(0).toString());
@@ -65,11 +155,11 @@ public class JosaFormatter {
         }
 
         for (int i = 1; i < formattedStrings.size(); ++i) {
-            Formatter.FormattedString formattedString = formattedStrings.get(i);
+            FormattedString formattedString = formattedStrings.get(i);
 
             String str;
 
-            if (formattedString.isFixedString()) {
+            if (!formattedString.isFormatString()) {
                 str = getJosaModifiedString(formattedStrings.get(i - 1).toString(), formattedString.toString());
             } else {
                 str = formattedString.toString();

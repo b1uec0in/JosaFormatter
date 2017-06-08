@@ -25,8 +25,6 @@ public class ExampleUnitTest {
     public void sample1() throws Exception {
         System.out.println("\nsample1:");
 
-        assertEqualsEx("OS10은 이미 사용중입니다.", KoreanUtils.format("%s은 이미 사용중입니다.", "OS10"));
-
         // HangulJongSungDetector
         assertEqualsEx("삼을", KoreanUtils.format("%s을", "삼"));
         assertEquals("삼을", KoreanUtils.format("%s를", "삼"));
