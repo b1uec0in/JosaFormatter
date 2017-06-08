@@ -1,10 +1,11 @@
 # Josa Formatter 1.5
-[![Release](https://jitpack.io/v/b1uec0in/JosaFormatter.svg)](https://jitpack.io/#User/Repo)
-
 String.format을 확장해 받침에 따라 조사(은,는,이,가,을,를 등)를 교정합니다.
 
 ***아직 읽는 방법에 대한 규칙을 찾지 못한 부분이 많습니다. 오동작이 발견되거나 좀 더 나은 규칙이 있다면 꼭!! 알려주세요.***
 
+[![CI Status](http://img.shields.io/travis/b1uec0in/JosaFormatter.svg?style=flat)](https://travis-ci.org/b1uec0in/JosaFormatter)
+https://travis-ci.org/b1uec0in/JosaFormatter.svg?branch=master
+[![Release](https://jitpack.io/v/b1uec0in/JosaFormatter.svg)](https://jitpack.io/#User/Repo)
 
 ### Sample
 
