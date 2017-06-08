@@ -5,11 +5,8 @@
 
 [![CI Status](http://img.shields.io/travis/b1uec0in/JosaFormatter.svg?style=flat)](https://travis-ci.org/b1uec0in/JosaFormatter)
 [![Release](https://jitpack.io/v/b1uec0in/JosaFormatter.svg)](https://jitpack.io/#User/Repo)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Language: java](https://img.shields.io/badge/Language-java-84acfe.svg)](https://github.com/b1uec0in/JosaFormatter)
-[![Language: swift](https://img.shields.io/badge/Language-swift-84acfe.svg)](https://github.com/b1uec0in/SwiftJosaFormatter)
-[![Sample: ios](https://img.shields.io/badge/Sample-ios-feac84.svg)](https://github.com/b1uec0in/SwiftJosaFormatter/tree/master/Example)
-[![Sample: android](https://img.shields.io/badge/Sample-android-feac84.svg)](https://github.com/b1uec0in/AndroidJosaFormatter)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![language: java](https://img.shields.io/badge/language-java-84acfe.svg)](https://github.com/b1uec0in/JosaFormatter)
 
 
 ### Sample
@@ -112,4 +109,5 @@ http://kangwoo.tistory.com/33
 * suffix로 영어 단어 찾기 <br/>
 http://www.litscape.com/word_tools/ends_with.php
 
-
+* Android Sample<br/>
+https://github.com/b1uec0in/AndroidJosaFormatter
