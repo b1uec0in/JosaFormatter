@@ -6,10 +6,10 @@
 [![CI Status](http://img.shields.io/travis/b1uec0in/JosaFormatter.svg?style=flat)](https://travis-ci.org/b1uec0in/JosaFormatter)
 [![Release](https://jitpack.io/v/b1uec0in/JosaFormatter.svg)](https://jitpack.io/#User/Repo)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![language: java](https://img.shields.io/badge/language-java-84acfe.svg)](https://github.com/b1uec0in/JosaFormatter)
-[![language: swift](https://img.shields.io/badge/language-swift-84acfe.svg)](https://github.com/b1uec0in/SwiftJosaFormatter)
-[![sample: ios](https://img.shields.io/badge/sample-ios-feac84.svg)](https://github.com/b1uec0in/SwiftJosaFormatter/tree/master/Example)
-[![sample: android](https://img.shields.io/badge/sample-android-feac84.svg)](https://github.com/b1uec0in/AndroidJosaFormatter)
+[![Language: java](https://img.shields.io/badge/Language-java-84acfe.svg)](https://github.com/b1uec0in/JosaFormatter)
+[![Language: swift](https://img.shields.io/badge/Language-swift-84acfe.svg)](https://github.com/b1uec0in/SwiftJosaFormatter)
+[![Sample: ios](https://img.shields.io/badge/Sample-ios-feac84.svg)](https://github.com/b1uec0in/SwiftJosaFormatter/tree/master/Example)
+[![Sample: android](https://img.shields.io/badge/Sample-android-feac84.svg)](https://github.com/b1uec0in/AndroidJosaFormatter)
 
 
 ### Sample
