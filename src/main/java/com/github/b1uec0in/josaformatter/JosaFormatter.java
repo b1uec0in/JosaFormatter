@@ -373,84 +373,67 @@ public class JosaFormatter {
 
         @Override
         public boolean hasJongSung(String str) {
-            char lastChar1 = CharUtils.lastChar(str);
+            int length = str.length();
+            char lastChar1 = Character.toLowerCase(str.charAt(length - 1));
 
             // 3자 이상인 경우만 마지막 2자만 suffix로 간주.
             String suffix = null;
+            char lastChar2 = '\0';
+            char lastChar3 = '\0';
             if (str.length() >= 3) {
-                char lastChar2 = str.charAt(str.length() - 2);
-                char lastChar3 = str.charAt(str.length() - 3);
+                lastChar2 = Character.toLowerCase(str.charAt(length - 2));
+                lastChar3 = Character.toLowerCase(str.charAt(length - 3));
 
                 if (CharUtils.isAlpha(lastChar2) && CharUtils.isAlpha(lastChar3)) {
-                    suffix = (String.valueOf(lastChar2) + String.valueOf(lastChar1)).toLowerCase();
+                    suffix = String.valueOf(lastChar2) + String.valueOf(lastChar1);
                 }
             }
 
             if (suffix != null) {
-                // 마지막 1문자로 오면 항상 종성인 경우
-                String jongSungChars = "lmn";
-                if (jongSungChars.indexOf(lastChar1) >= 0) {
-                    return true;
-                }
+                // 끝나는 문자들로 종성 여부를 확인할 때 알파벳 24자를 기준으로 분류하면 아래와 같다.
 
-                // 마지막 1문자로 오면 항상 종성이 아닌 경우
-                String notJongSungChars = "afhiorsuvwxyz";
-                if (notJongSungChars.indexOf(lastChar1) >= 0) {
+                String jongSungChars = "lmn"; // 1. 항상 받침으로 읽음
+                String notJongSungChars = "afhiorsuvwxyz"; // 2. 항상 받침으로 읽지 않음
+                String jongSungCandidateChars = "bckpt"; // 3. 대체로 받침으로 읽음
+                String notJongSungCandidateChars = "deg";  // 4. 대체로 받침으로 읽지 않음
+
+                if (jongSungChars.indexOf(lastChar1) >= 0) {
+                    // 마지막 1문자로 lmn은 항상 받침으로 읽음
+                    return true;
+                } else if (notJongSungChars.indexOf(lastChar1) >= 0) {
+                    // 마지막 1문자로 afhiorsuvwxyz는 항상 받침으로 읽지 않음
                     return false;
                 }
 
-                // 마지막 2문자로 오면 항상 종성인 경우
+                // 마지막 2문자에 따른 단어별 예외 처리.
                 switch (suffix) {
-                    case "le":
-                    case "ne":
-                    case "me":
-                    case "ng":
+                    case "mb": // b 묵음
                         return true;
-                }
-
-                // 마지막 2문자로 오면 항상 종성이 아닌 경우
-                switch (suffix) {
-                    case "rb": // 브
-
-                    case "lc": // 크
-                    case "rc":
-                    case "sc":
-
-                    case "ed": // 드
-                    case "nd":
-                    case "ld":
-                    case "rd":
-
-                    case "lk": // 크
-                    case "nk":
-                    case "rk":
-                    case "sk":
-
-                    case "lp": // 프
-                    case "mp":
-                    case "np":
-                    case "rp":
-                    case "sp":
-
-                    case "lt": // 트
-                    case "nt":
-                    case "pt":
-                    case "rt":
-                    case "st":
-                    case "xt":
-                        return false;
-                }
-
-                // 마지막 2문자에 따라 단어별 예외 케이스가 있는 경우
-                switch (suffix) {
                     case "od":
                         return str.endsWith("god") || str.endsWith("good") || str.endsWith("pod");
+                    case "ag":
+                        return str.endsWith("bag");
+                    case "ig":
+                        return str.endsWith("big") || str.endsWith("gig");
                 }
 
-                // 나머지는 마지막 1문자를 보고 종성을 판단 한다.
-                String jongSungExtraChars = "bcdkpqt";
-                if (jongSungExtraChars.indexOf(lastChar1) >= 0) {
-                    return true;
+                if (jongSungCandidateChars.indexOf(lastChar1) >= 0) {
+                    // 마지막 1문자로 bckpt는 대체로 받침으로 읽지만, 앞에 blmnrsx가 있다면 '브,크,프,트'로 발음한다.
+                    String notJongLastPrevChars = "blmnrsx";
+                    return notJongLastPrevChars.indexOf(lastChar2) < 0;
+                } else if (notJongSungCandidateChars.indexOf(lastChar1) >= 0) {
+                    // 마지막 1문자로 deg는 대체로 받침으로 읽지 않지만, 아래의 경우는 받침으로 읽음.
+                    switch (suffix) {
+                        case "le": // ㄹ
+                        case "me": // ㅁ
+                        case "ne": // ㄴ
+                        case "ng": // ㅇ
+                            return true;
+                        default:
+                            return false;
+                    }
+                } else {
+                    // unreachable condition
                 }
             } else {
                 // 1자, 2자는 약자로 간주하고 알파벳 그대로 읽음. (엘엠엔알)만 종성이 있음.
