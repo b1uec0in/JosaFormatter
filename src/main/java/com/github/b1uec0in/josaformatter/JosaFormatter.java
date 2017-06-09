@@ -397,31 +397,40 @@ public class JosaFormatter {
                 String notJongSungCandidateChars = "deg";  // 4. 대체로 받침으로 읽지 않음
 
                 if (jongSungChars.indexOf(lastChar1) >= 0) {
-                    // 마지막 1문자로 lmn은 항상 받침으로 읽음
+                    // 마지막 1문자 lmn은 항상 받침으로 읽음
                     return true;
                 } else if (notJongSungChars.indexOf(lastChar1) >= 0) {
-                    // 마지막 1문자로 afhiorsuvwxyz는 항상 받침으로 읽지 않음
+                    // 마지막 1문자 afhiorsuvwxyz는 항상 받침으로 읽지 않음
                     return false;
                 }
 
-                // 마지막 2문자에 따른 단어별 예외 처리.
-                switch (suffix) {
-                    case "mb": // b 묵음
-                        return true;
-                    case "od":
-                        return str.endsWith("god") || str.endsWith("good") || str.endsWith("pod");
-                    case "ag":
-                        return str.endsWith("bag");
-                    case "ig":
-                        return str.endsWith("big") || str.endsWith("gig");
-                }
-
                 if (jongSungCandidateChars.indexOf(lastChar1) >= 0) {
-                    // 마지막 1문자로 bckpt는 대체로 받침으로 읽지만, 앞에 blmnrsx가 있다면 '브,크,프,트'로 발음한다.
-                    String notJongLastPrevChars = "blmnrsx";
-                    return notJongLastPrevChars.indexOf(lastChar2) < 0;
+                    // 예외 처리
+                    switch (suffix) {
+                        case "ck":
+                            return !(str.endsWith("check"));
+                        case "mb": // b 묵음
+                        case "pp": // app 예외
+                            return true;
+                        case "ot":
+                            return !(str.endsWith("boot") || str.endsWith("root"));
+                    }
+
+                    // 마지막 1문자 bckpt는 모음 뒤에서는 받침으로 읽는다.
+                    String vowelChars = "aeiou";
+                    return vowelChars.indexOf(lastChar2) >= 0;
                 } else if (notJongSungCandidateChars.indexOf(lastChar1) >= 0) {
-                    // 마지막 1문자로 deg는 대체로 받침으로 읽지 않지만, 아래의 경우는 받침으로 읽음.
+                    // 예외 처리
+                    switch (suffix) {
+                        case "od":
+                            return str.endsWith("god") || str.endsWith("good") || str.endsWith("pod");
+                        case "ag":
+                            return str.endsWith("bag");
+                        case "ig":
+                            return str.endsWith("big") || str.endsWith("gig");
+                    }
+
+                    // 마지막 1문자 deg는 대체로 받침으로 읽지 않지만, 아래의 경우는 받침으로 읽음.
                     switch (suffix) {
                         case "le": // ㄹ
                         case "me": // ㅁ

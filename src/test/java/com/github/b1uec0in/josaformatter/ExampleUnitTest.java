@@ -141,6 +141,9 @@ public class ExampleUnitTest {
                 "god",
                 "game",
                 "gone",
+                "truck",
+                "school",
+                "foot",
         };
 
         // 받침 없는 경우
@@ -148,8 +151,12 @@ public class ExampleUnitTest {
                 "herb",
                 "risk",
                 "tank",
+                "craft",
+                "root",
                 "text",
                 "wood",
+                "rapid",
+
         };
 
 
