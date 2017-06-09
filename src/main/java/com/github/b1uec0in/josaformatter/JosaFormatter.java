@@ -390,8 +390,7 @@ public class JosaFormatter {
             }
 
             if (suffix != null) {
-                // 끝나는 문자들로 종성 여부를 확인할 때 알파벳 24자를 기준으로 분류하면 아래와 같다.
-
+                // 끝나는 문자들로 종성 여부를 확인할 때 qj를 제외한 알파벳 22자를 기준으로 분류하면 아래와 같다.
                 String jongSungChars = "lmn"; // 1. 항상 받침으로 읽음
                 String notJongSungChars = "afhiorsuvwxyz"; // 2. 항상 받침으로 읽지 않음
                 String jongSungCandidateChars = "bckpt"; // 3. 대체로 받침으로 읽음
