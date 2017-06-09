@@ -388,7 +388,7 @@ public class JosaFormatter {
 
             if (suffix != null) {
                 // 마지막 1문자로 오면 항상 종성인 경우
-                String jongSungChars = "blmnp";
+                String jongSungChars = "lmn";
                 if (jongSungChars.indexOf(lastChar1) >= 0) {
                     return true;
                 }
@@ -410,6 +410,8 @@ public class JosaFormatter {
 
                 // 마지막 2문자로 오면 항상 종성이 아닌 경우
                 switch (suffix) {
+                    case "rb": // 브
+
                     case "lc": // 크
                     case "rc":
                     case "sc":
@@ -421,8 +423,14 @@ public class JosaFormatter {
 
                     case "lk": // 크
                     case "nk":
-                    case "sk":
                     case "rk":
+                    case "sk":
+
+                    case "lp": // 프
+                    case "mp":
+                    case "np":
+                    case "rp":
+                    case "sp":
 
                     case "lt": // 트
                     case "nt":
@@ -440,7 +448,7 @@ public class JosaFormatter {
                 }
 
                 // 나머지는 마지막 1문자를 보고 종성을 판단 한다.
-                String jongSungExtraChars = "cdkpqt";
+                String jongSungExtraChars = "bcdkpqt";
                 if (jongSungExtraChars.indexOf(lastChar1) >= 0) {
                     return true;
                 }
