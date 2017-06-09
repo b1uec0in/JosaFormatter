@@ -142,7 +142,6 @@ public class ExampleUnitTest {
                 "game",
                 "gone",
                 "truck",
-                "school",
                 "foot",
         };
 

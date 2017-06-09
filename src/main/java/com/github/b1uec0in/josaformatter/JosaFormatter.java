@@ -357,6 +357,19 @@ public class JosaFormatter {
 
     public static class EnglishJongSungDetector implements JongSungDetector {
 
+        private ArrayList<Pair<String, Boolean>> customRules = new ArrayList<>(Arrays.asList(
+                new Pair<>("app", true),
+                new Pair<>("god", true),
+                new Pair<>("good", true),
+                new Pair<>("pod", true),
+                new Pair<>("bag", true),
+                new Pair<>("big", true),
+                new Pair<>("gig", true),
+                new Pair<>("chocolate", true),
+                new Pair<>("root", false),
+                new Pair<>("boot", false),
+                new Pair<>("check", false)
+        ));
         @Override
         public boolean canHandle(String str) {
             char lastChar  = CharUtils.lastChar(str);
@@ -371,18 +384,30 @@ public class JosaFormatter {
             return CharUtils.isAlpha(lastChar);
         }
 
+        public void addCustomRule(String suffix, boolean hasJongSung) {
+            customRules.add(new Pair<>(suffix, hasJongSung));
+        }
+
         @Override
         public boolean hasJongSung(String str) {
+            str = str.toLowerCase();
+
+            for (Pair<String, Boolean> rule : customRules) {
+                if (str.endsWith(rule.first)) {
+                    return rule.second;
+                }
+            }
+
             int length = str.length();
-            char lastChar1 = Character.toLowerCase(str.charAt(length - 1));
+            char lastChar1 = str.charAt(length - 1);
 
             // 3자 이상인 경우만 마지막 2자만 suffix로 간주.
             String suffix = null;
             char lastChar2 = '\0';
             char lastChar3 = '\0';
             if (str.length() >= 3) {
-                lastChar2 = Character.toLowerCase(str.charAt(length - 2));
-                lastChar3 = Character.toLowerCase(str.charAt(length - 3));
+                lastChar2 = str.charAt(length - 2);
+                lastChar3 = str.charAt(length - 3);
 
                 if (CharUtils.isAlpha(lastChar2) && CharUtils.isAlpha(lastChar3)) {
                     suffix = String.valueOf(lastChar2) + String.valueOf(lastChar1);
@@ -408,28 +433,14 @@ public class JosaFormatter {
                     // 예외 처리
                     switch (suffix) {
                         case "ck":
-                            return !(str.endsWith("check"));
                         case "mb": // b 묵음
-                        case "pp": // app 예외
                             return true;
-                        case "ot":
-                            return !(str.endsWith("boot") || str.endsWith("root"));
                     }
 
                     // 마지막 1문자 bckpt는 모음 뒤에서는 받침으로 읽는다.
                     String vowelChars = "aeiou";
                     return vowelChars.indexOf(lastChar2) >= 0;
                 } else if (notJongSungCandidateChars.indexOf(lastChar1) >= 0) {
-                    // 예외 처리
-                    switch (suffix) {
-                        case "od":
-                            return str.endsWith("god") || str.endsWith("good") || str.endsWith("pod");
-                        case "ag":
-                            return str.endsWith("bag");
-                        case "ig":
-                            return str.endsWith("big") || str.endsWith("gig");
-                    }
-
                     // 마지막 1문자 deg는 대체로 받침으로 읽지 않지만, 아래의 경우는 받침으로 읽음.
                     switch (suffix) {
                         case "le": // ㄹ
