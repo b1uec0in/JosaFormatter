@@ -6,7 +6,7 @@
 [![CI Status](http://img.shields.io/travis/b1uec0in/JosaFormatter.svg?style=flat)](https://travis-ci.org/b1uec0in/JosaFormatter)
 [![Release](https://jitpack.io/v/b1uec0in/JosaFormatter.svg)](https://jitpack.io/#b1uec0in/JosaFormatter)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![language: java|swift](https://img.shields.io/badge/language-java|swift-84acfe.svg)](#Repositories)
+[![language: java|swift](https://img.shields.io/badge/language-java|swift-84acfe.svg)](#repositories)
 
 
 ### Sample
