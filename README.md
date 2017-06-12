@@ -6,7 +6,7 @@
 [![CI Status](http://img.shields.io/travis/b1uec0in/JosaFormatter.svg?style=flat)](https://travis-ci.org/b1uec0in/JosaFormatter)
 [![Release](https://jitpack.io/v/b1uec0in/JosaFormatter.svg)](https://jitpack.io/#b1uec0in/JosaFormatter)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![language: java](https://img.shields.io/badge/language-java-84acfe.svg)](https://github.com/b1uec0in/JosaFormatter)
+[![language: java|swift](https://img.shields.io/badge/language-java|swift-84acfe.svg)](#Repositories)
 
 
 ### Sample
@@ -96,6 +96,16 @@ String text = KoreanUtils.format("%s을 구매하시겠습니까?", "베가 베�
 // 베가 베타 3를 구매하시겠습니까?
 ```
 
+### Repositories
+* Java version<br/>
+https://github.com/b1uec0in/JosaFormatter
+
+* Swift version<br/>
+https://github.com/b1uec0in/SwiftJosaFormatter
+
+* Android Sample<br/>
+https://github.com/b1uec0in/AndroidJosaFormatter
+
 ### Reference
 * 한글 받침에 따라 '을/를' 구분 <br/>
 http://gun0912.tistory.com/65
@@ -109,5 +119,3 @@ http://kangwoo.tistory.com/33
 * suffix로 영어 단어 찾기 <br/>
 http://www.litscape.com/word_tools/ends_with.php
 
-* Android Sample<br/>
-https://github.com/b1uec0in/AndroidJosaFormatter
