@@ -132,29 +132,38 @@ public class ExampleUnitTest {
 
     @Test
     public void testEnglishJongSungDetector() throws Exception {
-
+        System.out.println("\nEnglishJongSungDetector:");
         // 받침 있는 경우
         String[] jongSungSample = {
+                "job",
+                "bomb",
                 "apple",
                 "god",
                 "game",
                 "gone",
+                "truck",
+                "foot",
         };
 
         // 받침 없는 경우
         String[] notJongSungSample = {
+                "herb",
                 "risk",
                 "tank",
+                "craft",
+                "root",
                 "text",
                 "wood",
+                "rapid",
+
         };
 
 
         for (String str: jongSungSample) {
-            assertEquals(str + "은", KoreanUtils.format("%s는", str));
+            assertEqualsEx(str + "은", KoreanUtils.format("%s는", str));
         }
         for (String str: notJongSungSample) {
-            assertEquals(str + "는", KoreanUtils.format("%s은", str));
+            assertEqualsEx(str + "는", KoreanUtils.format("%s은", str));
         }
     }
 }

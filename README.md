@@ -1,12 +1,10 @@
-# Josa Formatter 1.5
+# Josa Formatter
 받침에 따라 조사(은,는,이,가,을,를 등)를 교정할 수 있는 String.format과 유사한 함수를 제공합니다.
-
-***아직 읽는 방법에 대한 규칙을 찾지 못한 부분이 많습니다. 오동작이 발견되거나 좀 더 나은 규칙이 있다면 꼭!! 알려주세요.***
 
 [![CI Status](http://img.shields.io/travis/b1uec0in/JosaFormatter.svg?style=flat)](https://travis-ci.org/b1uec0in/JosaFormatter)
 [![Release](https://jitpack.io/v/b1uec0in/JosaFormatter.svg)](https://jitpack.io/#b1uec0in/JosaFormatter)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![language: java](https://img.shields.io/badge/language-java-84acfe.svg)](https://github.com/b1uec0in/JosaFormatter)
+[![language: java|swift](https://img.shields.io/badge/language-java|swift-84acfe.svg)](#repositories)
 
 
 ### Sample
@@ -29,7 +27,7 @@ apply plugin: 'java'  // or 'com.android.application'
 
 dependencies {
 ...
-+ compile 'com.github.b1uec0in:JosaFormatter:1.5'
++ compile 'com.github.b1uec0in:JosaFormatter:+'
 }
 ```
 
@@ -96,7 +94,20 @@ String text = KoreanUtils.format("%s을 구매하시겠습니까?", "베가 베�
 // 베가 베타 3를 구매하시겠습니까?
 ```
 
+### Repositories
+* Java version<br/>
+https://github.com/b1uec0in/JosaFormatter
+
+* Swift version<br/>
+https://github.com/b1uec0in/SwiftJosaFormatter
+
+* Android Sample<br/>
+https://github.com/b1uec0in/AndroidJosaFormatter
+
 ### Reference
+* 한국어 속 영어 읽기<br/>
+http://blog.naver.com/b1uec0in/221025080633
+
 * 한글 받침에 따라 '을/를' 구분 <br/>
 http://gun0912.tistory.com/65
 
@@ -109,5 +120,3 @@ http://kangwoo.tistory.com/33
 * suffix로 영어 단어 찾기 <br/>
 http://www.litscape.com/word_tools/ends_with.php
 
-* Android Sample<br/>
-https://github.com/b1uec0in/AndroidJosaFormatter
