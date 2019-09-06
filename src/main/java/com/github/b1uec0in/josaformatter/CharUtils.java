@@ -25,8 +25,15 @@ class CharUtils {
         return ch >= 0xac00 && ch <= 0xd7af;
     }
 
-    public static boolean hasHangulJongSung(char ch) {
-        return isHangulSyllables(ch) && (ch - 0xAC00) % 28 > 0;
+    public static int getHangulJongSungType(char ch) {
+        int result = 0;
+        if (isHangulSyllables(ch)) {
+            int code = (ch - 0xAC00) % 28;
+            if (code > 0) ++result;
+            if (code == 8) ++result;
+        }
+
+        return result;
     }
 
     public static boolean isHiragana(char ch) {
