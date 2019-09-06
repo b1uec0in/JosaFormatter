@@ -30,6 +30,7 @@ public class ExampleUnitTest {
         assertEquals("삼을", KoreanUtils.format("%s를", "삼"));
         assertEqualsEx("사를", KoreanUtils.format("%s을", "사"));
         assertEquals("사를", KoreanUtils.format("%s를", "사"));
+        assertEquals("말로", KoreanUtils.format("%s로", "말"));
 
         // EnglishCapitalJongSungDetector
         assertEqualsEx("FBI는 이미 사용중입니다.", KoreanUtils.format("%s는 이미 사용중입니다.", "FBI"));
@@ -44,8 +45,15 @@ public class ExampleUnitTest {
         assertEqualsEx("first는", KoreanUtils.format("%s는", "first"));
         assertEqualsEx("unit은", KoreanUtils.format("%s는", "unit"));
         assertEqualsEx("p는", KoreanUtils.format("%s는", "p"));
+        assertEqualsEx("r로", KoreanUtils.format("%s로", "r"));
+        assertEqualsEx("gear로", KoreanUtils.format("%s로", "gear"));
         assertEqualsEx("app은", KoreanUtils.format("%s는", "app"));
         assertEqualsEx("method는", KoreanUtils.format("%s는", "method"));
+        assertEqualsEx("title로", KoreanUtils.format("%s로", "title"));
+        assertEqualsEx("cook으로", KoreanUtils.format("%s로", "cook"));
+        assertEqualsEx("cool로", KoreanUtils.format("%s로", "cool"));
+        assertEqualsEx("quick으로", KoreanUtils.format("%s로", "quick"));
+        assertEqualsEx("shiny가", KoreanUtils.format("%s가", "shiny"));
 
 
         // EnglishNumberKorStyleJongSungDetector
@@ -63,6 +71,8 @@ public class ExampleUnitTest {
         // NumberJongSungDetector
         assertEqualsEx("3과 4를 비교", KoreanUtils.format("%s와 %s를 비교", 3, 4));
         assertEqualsEx("112와 4.0을 비교", KoreanUtils.format("%s와 %s를 비교", 112, 4.0));
+        assertEqualsEx("8을 7로 나누면", KoreanUtils.format("%s을 %s로 나누면", 8, 7));
+        assertEqualsEx("6으로 나누고 7로 나누고 100으로 나누고 9로 나누고", KoreanUtils.format("%s로 나누고 %s로 나누고 %s로 나누고 %s로 나누고", 6, 7, 100, 9));
 
 
         // HanjaJongSungDetector

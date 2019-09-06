@@ -179,7 +179,7 @@ public class JosaFormatter {
         do {
             index = str.indexOf(josa, searchFromIndex);
 
-            if (index >=0) {
+            if (index >= 0) {
                 int josaNext = index + josaLength;
 
                 // 조사로 끝나거나 뒤에 공백이 있어야 함.
@@ -191,10 +191,10 @@ public class JosaFormatter {
                     return index;
                 }
             } else {
-               return -1;
+                return -1;
             }
             searchFromIndex = index + josaLength;
-        } while(searchFromIndex < strLength);
+        } while (searchFromIndex < strLength);
 
         return -1;
     }
@@ -242,7 +242,7 @@ public class JosaFormatter {
             ArrayList<JongSungDetector> jongSungDetectors = getJongSungDetectors();
             for (JongSungDetector jongSungDetector : jongSungDetectors) {
                 if (jongSungDetector.canHandle(readText)) {
-                    return replaceStringByJongSung(str, matchedJosaPair, jongSungDetector.hasJongSung(readText));
+                    return replaceStringByJongSung(str, matchedJosaPair, jongSungDetector.getJongSungType(readText));
                 }
             }
 
@@ -255,11 +255,19 @@ public class JosaFormatter {
         return str;
     }
 
-    public String replaceStringByJongSung(String str, Pair<String, String> josaPair, boolean hasJongSung) {
+    public String replaceStringByJongSung(String str, Pair<String, String> josaPair, int jongSungType) {
         if (josaPair != null) {
             // 잘못된 것을 찾아야 하므로 반대로 찾는다. 종성이 있으면 종성이 없을 때 사용하는 조사가 사용 되었는지 찾는다.
-            String searchStr = hasJongSung ? josaPair.second : josaPair.first;
-            String replaceStr = hasJongSung ? josaPair.first : josaPair.second;
+            boolean useFirst;
+
+            if (josaPair.first.equals("으로")) {
+                useFirst = jongSungType == 1;
+            } else {
+                useFirst = jongSungType > 0;
+            }
+
+            String searchStr = useFirst ? josaPair.second : josaPair.first;
+            String replaceStr = useFirst ? josaPair.first : josaPair.second;
             int josaIndex = str.indexOf(searchStr);
 
             if (josaIndex >= 0 && isEndSkipText(str, 0, josaIndex)) {
@@ -317,7 +325,8 @@ public class JosaFormatter {
     interface JongSungDetector {
         boolean canHandle(String str);
 
-        boolean hasJongSung(String str);
+        // 0: 종성 없음. 1: 종성 있음. 2: 종성이 'ㄹ'임.
+        int getJongSungType(String str);
     }
 
 
@@ -329,8 +338,8 @@ public class JosaFormatter {
         }
 
         @Override
-        public boolean hasJongSung(String str) {
-            return CharUtils.hasHangulJongSung(CharUtils.lastChar(str));
+        public int getJongSungType(String str) {
+            return CharUtils.getHangulJongSungType(CharUtils.lastChar(str));
         }
     }
 
@@ -347,32 +356,42 @@ public class JosaFormatter {
         }
 
         @Override
-        public boolean hasJongSung(String str) {
-            String jongSungChars = "LMNR";
+        public int getJongSungType(String str) {
             char lastChar = CharUtils.lastChar(str);
-            return jongSungChars.indexOf(lastChar) >= 0;
+            switch (lastChar) {
+                case 'M':
+                case 'N':
+                    return 1;
+                case 'L':
+                case 'R':
+                    return 2;
+                default:
+                    return 0;
+            }
+
         }
     }
 
 
     public static class EnglishJongSungDetector implements JongSungDetector {
 
-        private ArrayList<Pair<String, Boolean>> customRules = new ArrayList<>(Arrays.asList(
-                new Pair<>("app", true),
-                new Pair<>("god", true),
-                new Pair<>("good", true),
-                new Pair<>("pod", true),
-                new Pair<>("bag", true),
-                new Pair<>("big", true),
-                new Pair<>("gig", true),
-                new Pair<>("chocolate", true),
-                new Pair<>("root", false),
-                new Pair<>("boot", false),
-                new Pair<>("check", false)
+        private ArrayList<Pair<String, Integer>> customRules = new ArrayList<>(Arrays.asList(
+                new Pair<>("app", 1),
+                new Pair<>("god", 1),
+                new Pair<>("good", 1),
+                new Pair<>("pod", 1),
+                new Pair<>("bag", 1),
+                new Pair<>("big", 1),
+                new Pair<>("gig", 1),
+                new Pair<>("chocolate", 1),
+                new Pair<>("root", 0),
+                new Pair<>("boot", 0),
+                new Pair<>("check", 0)
         ));
+
         @Override
         public boolean canHandle(String str) {
-            char lastChar  = CharUtils.lastChar(str);
+            char lastChar = CharUtils.lastChar(str);
 
             // q, j 등으로 끝나는 단어는 알려지지 않음.
             String unknownWordSuffixs = "qj";
@@ -384,15 +403,15 @@ public class JosaFormatter {
             return CharUtils.isAlpha(lastChar);
         }
 
-        public void addCustomRule(String suffix, boolean hasJongSung) {
-            customRules.add(new Pair<>(suffix, hasJongSung));
+        public void addCustomRule(String suffix, int jongSungType) {
+            customRules.add(new Pair<>(suffix, jongSungType));
         }
 
         @Override
-        public boolean hasJongSung(String str) {
+        public int getJongSungType(String str) {
             str = str.toLowerCase();
 
-            for (Pair<String, Boolean> rule : customRules) {
+            for (Pair<String, Integer> rule : customRules) {
                 if (str.endsWith(rule.first)) {
                     return rule.second;
                 }
@@ -416,17 +435,21 @@ public class JosaFormatter {
 
             if (suffix != null) {
                 // 끝나는 문자들로 종성 여부를 확인할 때 qj를 제외한 알파벳 22자를 기준으로 분류하면 아래와 같다.
-                String jongSungChars = "lmn"; // 1. 항상 받침으로 읽음
-                String notJongSungChars = "afhiorsuvwxyz"; // 2. 항상 받침으로 읽지 않음
-                String jongSungCandidateChars = "bckpt"; // 3. 대체로 받침으로 읽음
-                String notJongSungCandidateChars = "deg";  // 4. 대체로 받침으로 읽지 않음
+                String rieuljongSungChars = "l"; // 1. 항상 받침 'ㄹ'로 읽음
+                String jongSungChars = "mn"; // 2. 항상 받침으로 읽음
+                String notJongSungChars = "afhiorsuvwxyz"; // 3. 항상 받침으로 읽지 않음
+                String jongSungCandidateChars = "bckpt"; // 4. 대체로 받침으로 읽음
+                String notJongSungCandidateChars = "deg";  // 5. 대체로 받침으로 읽지 않음
 
-                if (jongSungChars.indexOf(lastChar1) >= 0) {
-                    // 마지막 1문자 lmn은 항상 받침으로 읽음
-                    return true;
+                if (rieuljongSungChars.indexOf(lastChar1) >= 0) {
+                    // 마지막 1문자 l은 항상 'ㄹ'으로 읽음
+                    return 2;
+                } else if (jongSungChars.indexOf(lastChar1) >= 0) {
+                    // 마지막 1문자 mn은 항상 받침으로 읽음
+                    return 1;
                 } else if (notJongSungChars.indexOf(lastChar1) >= 0) {
                     // 마지막 1문자 afhiorsuvwxyz는 항상 받침으로 읽지 않음
-                    return false;
+                    return 0;
                 }
 
                 if (jongSungCandidateChars.indexOf(lastChar1) >= 0) {
@@ -434,34 +457,37 @@ public class JosaFormatter {
                     switch (suffix) {
                         case "ck":
                         case "mb": // b 묵음
-                            return true;
+                            return 1;
                     }
 
                     // 마지막 1문자 bckpt는 모음 뒤에서는 받침으로 읽는다.
                     String vowelChars = "aeiou";
-                    return vowelChars.indexOf(lastChar2) >= 0;
+                    return vowelChars.indexOf(lastChar2) >= 0 ? 1 : 0;
                 } else if (notJongSungCandidateChars.indexOf(lastChar1) >= 0) {
                     // 마지막 1문자 deg는 대체로 받침으로 읽지 않지만, 아래의 경우는 받침으로 읽음.
                     switch (suffix) {
                         case "le": // ㄹ
+                            return 2;
                         case "me": // ㅁ
                         case "ne": // ㄴ
                         case "ng": // ㅇ
-                            return true;
+                            return 1;
                         default:
-                            return false;
+                            return 0;
                     }
                 } else {
                     // unreachable condition
                 }
             } else {
                 // 1자, 2자는 약자로 간주하고 알파벳 그대로 읽음. (엘엠엔알)만 종성이 있음.
-                String jongSungChars = "lmnr";
-                if (jongSungChars.indexOf(lastChar1) >= 0) {
-                    return true;
+                if ("lr".indexOf(lastChar1) >= 0) {
+                    return 2;
+                }
+                if ("mn".indexOf(lastChar1) >= 0) {
+                    return 2;
                 }
             }
-            return false;
+            return 0;
         }
     }
 
@@ -538,24 +564,21 @@ public class JosaFormatter {
         }
 
         @Override
-        public boolean hasJongSung(String str) {
+        public int getJongSungType(String str) {
             EnglishNumberJongSungDetector.ParseResult parseResult = EnglishNumberJongSungDetector.parse(str);
 
             if (!parseResult.isFloat) {
                 long number = (long) (parseResult.number);
 
                 if (number == 0) {
-                    return false;
+                    return 0;
                 }
 
                 // 두자리 예외 처리
                 int twoDigit = (int) (number % 100);
-                switch (twoDigit) {
-                    case 10:
-                    case 13:
-                    case 14:
-                    case 16:
-                        return true;
+
+                if (twoDigit != 12 && twoDigit >= 10 && twoDigit <= 19) {
+                    return 1;
                 }
 
                 // million 이상 예외 처리
@@ -563,7 +586,7 @@ public class JosaFormatter {
                 // 1000 : thousand (x)
                 // 1000000... : million, billion, trillion (o)
                 if (number % 100000 == 0) {
-                    return true;
+                    return 1;
                 }
             }
 
@@ -575,10 +598,10 @@ public class JosaFormatter {
                 case 7:
                 case 8:
                 case 9:
-                    return true;
+                    return 1;
             }
 
-            return false;
+            return 0;
         }
 
         public static class ParseResult {
@@ -606,7 +629,7 @@ public class JosaFormatter {
         }
 
         @Override
-        public boolean hasJongSung(String str) {
+        public int getJongSungType(String str) {
             EnglishNumberJongSungDetector.ParseResult parseResult = EnglishNumberJongSungDetector.parse(str);
             int number = (int) (parseResult.number);
             switch (number) {
@@ -615,10 +638,10 @@ public class JosaFormatter {
                 case 8:
                 case 9:
                 case 10:
-                    return true;
+                    return 1;
             }
 
-            return false;
+            return 0;
         }
     }
 
@@ -633,14 +656,14 @@ public class JosaFormatter {
         }
 
         @Override
-        public boolean hasJongSung(String str) {
+        public int getJongSungType(String str) {
             EnglishNumberJongSungDetector.ParseResult parseResult = EnglishNumberJongSungDetector.parse(str);
 
             if (!parseResult.isFloat) {
                 long number = (long) (parseResult.number);
                 // 조 예외 처리 : 조(받침 없음), 십, 백, 천, 만, 억, 경, 현
                 if (number % 1000000000000L == 0) {
-                    return false;
+                    return 1;
                 }
             }
 
@@ -651,12 +674,13 @@ public class JosaFormatter {
                 case 1:
                 case 3:
                 case 6:
+                    return 1;
                 case 7:
                 case 8:
-                    return true;
+                    return 2;
             }
 
-            return false;
+            return 0;
         }
     }
 
@@ -670,9 +694,9 @@ public class JosaFormatter {
         }
 
         @Override
-        public boolean hasJongSung(String str) {
+        public int getJongSungType(String str) {
             char hangulChar = HanjaMap.toHangul(CharUtils.lastChar(str));
-            return CharUtils.hasHangulJongSung(hangulChar);
+            return CharUtils.getHangulJongSungType(hangulChar);
         }
     }
 
@@ -685,10 +709,10 @@ public class JosaFormatter {
         }
 
         @Override
-        public boolean hasJongSung(String str) {
+        public int getJongSungType(String str) {
             char lastChar = CharUtils.lastChar(str);
 
-            return lastChar == 0x30f3 || lastChar == 0x3093;
+            return (lastChar == 0x30f3 || lastChar == 0x3093) ? 1 : 0;
         }
     }
 }
