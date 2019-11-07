@@ -24,9 +24,12 @@ public class Pair<FIRST, SECOND> {
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof Pair)) return false;
-        Pair pair = (Pair) object;
-        return this.first.equals(pair.first) &&
-                this.second.equals(pair.second);
+        if (object instanceof Pair) {
+            Pair<?, ?> pair = (Pair<?, ?>) object;
+            return this.first.equals(pair.first) &&
+                    this.second.equals(pair.second);
+        } else {
+            return false;
+        }
     }
 }
